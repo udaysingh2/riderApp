@@ -1,0 +1,6 @@
+analyzer:
+  exclude:
+    - test/_data/p4/lib/lib1.dart
+linter:
+  rules:
+    - camel_case_types

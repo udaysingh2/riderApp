@@ -1,0 +1,28 @@
+{
+  "version": 1,
+  "applicationId": "th.in.robinhood.rider.preprod",
+  "variantType": "BASE_APK",
+  "elements": [
+    {
+      "outputType": {
+        "type": "MERGED_MANIFESTS"
+      },
+      "apkData": {
+        "type": "MAIN",
+        "splits": [],
+        "versionCode": 648,
+        "versionName": "2.5.8",
+        "outputFile": "app-preprod-debug.apk",
+        "fullName": "preprodDebug",
+        "baseName": "preprod-debug",
+        "dirName": ""
+      },
+      "path": "AndroidManifest.xml",
+      "properties": {
+        "packageId": "th.in.robinhood.rider.preprod",
+        "split": "",
+        "minSdkVersion": "26"
+      }
+    }
+  ]
+}

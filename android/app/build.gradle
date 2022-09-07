@@ -1,0 +1,179 @@
+def localProperties = new Properties()
+def localPropertiesFile = rootProject.file('local.properties')
+if (localPropertiesFile.exists()) {
+    localPropertiesFile.withReader('UTF-8') { reader ->
+        localProperties.load(reader)
+    }
+}
+
+def flutterRoot = localProperties.getProperty('flutter.sdk')
+if (flutterRoot == null) {
+    throw new GradleException("Flutter SDK not found. Define location with flutter.sdk in the local.properties file.")
+}
+
+def flutterVersionCode = localProperties.getProperty('flutter.versionCode')
+if (flutterVersionCode == null) {
+    flutterVersionCode = '1'
+}
+
+def flutterVersionName = localProperties.getProperty('flutter.versionName')
+if (flutterVersionName == null) {
+    flutterVersionName = '1.0'
+}
+
+apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
+
+def keystoreProperties = new Properties()
+def keystorePropertiesFile = rootProject.file('app/key.properties')
+if (keystorePropertiesFile.exists()) {
+keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+
+}
+android {
+    compileSdkVersion 30
+
+    sourceSets {
+        main.java.srcDirs += 'src/main/kotlin'
+    }
+    lintOptions {
+        disable 'InvalidPackage'
+        checkReleaseBuilds false
+    }
+    signingConfigs {
+        release {
+        keyAlias keystoreProperties['keyAlias']
+        keyPassword keystoreProperties['keyPassword']
+        storeFile keystoreProperties['storeFile'] ? file(keystoreProperties['storeFile']) : null
+        storePassword keystoreProperties['storePassword']
+        }
+    }
+
+    defaultConfig {
+        // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
+        applicationId "th.in.robinhood.rider.dev"
+        minSdkVersion 26
+        targetSdkVersion 30
+        versionCode flutterVersionCode.toInteger()
+        versionName flutterVersionName
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    buildTypes {
+        release {
+            // TODO: Add your own signing config for the release build.
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
+        }
+    }
+    flavorDimensions "app"
+    productFlavors {
+
+        prod {
+            applicationId "th.in.robinhood.rider"
+            dimension "app"
+        }
+
+        qa {
+            applicationId "th.in.robinhood.rider.qa"
+            dimension "app"
+        }
+        preprod {
+            applicationId "th.in.robinhood.rider.preprod"
+            dimension "app"
+        }
+        preprod2 {
+            applicationId "th.in.robinhood.rider.preprod"
+            dimension "app"
+        }
+        preprod3 {
+            applicationId "th.in.robinhood.rider.preprod"
+            dimension "app"
+        }
+        dev {
+            applicationId "th.in.robinhood.rider.dev"
+            dimension "app"
+        }
+        dev2 {
+            applicationId "th.in.robinhood.rider.dev"
+            dimension "app"
+        }
+    }
+}
+
+flutter {
+    source '../..'
+}
+
+dependencies {
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation 'com.google.firebase:firebase-messaging:21.0.0'
+    //android 12
+    implementation 'androidx.work:work-runtime-ktx:2.8.0-alpha01'
+    implementation 'androidx.work:work-runtime:2.7.1' 
+    // Amplify core dependency
+    implementation 'com.amplifyframework:core:1.6.10'
+    implementation 'com.amplifyframework:aws-auth-cognito:1.6.10'
+    implementation 'com.amplifyframework:rxbindings:1.6.10'
+    implementation 'io.reactivex.rxjava2:rxandroid:2.0.1'
+    implementation 'io.reactivex.rxjava3:rxandroid:3.0.0'
+    implementation 'io.reactivex.rxjava3:rxjava:3.0.6'
+    implementation 'com.squareup.okhttp3:okhttp:4.1.0'
+    implementation 'com.google.android.gms:play-services-auth:19.0.0'
+    implementation 'com.google.android.gms:play-services-auth-api-phone:17.5.0'
+    // integration test
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'androidx.test:runner:1.2.0'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+}
+
+android.applicationVariants.all { variant ->
+    if (variant.getBuildType().name == "debug") {
+        task "configDevice${variant.name.capitalize()}" (type: Exec){
+            dependsOn variant.install
+
+            group = 'nameofyourtaskgroup'
+            description = 'Describe your task here.'
+
+            def adb = 'adb'
+            ArrayList<String> permissions = new ArrayList<>()
+            permissions.add('android.permission.CAMERA')
+            permissions.add('android.permission.ACCESS_BACKGROUND_LOCATION')
+            permissions.add('android.permission.ACCESS_COARSE_LOCATION')
+            permissions.add('android.permission.ACCESS_FINE_LOCATION')
+            permissions.add('android.permission.WRITE_EXTERNAL_STORAGE')
+            def newvar = ""
+            for (int i = 0; i < permissions.size(); i++) {
+
+                if(i<=0){
+                    newvar = "$adb shell pm grant ${variant.applicationId} ${permissions.get(i)}"
+                }
+                println("command executed: $adb ${permissions.get(i)}")
+            }
+            println("command executed: $newvar")
+            commandLine newvar.split(' ')
+            doLast{
+                exec {
+                    commandLine "$adb shell pm grant ${variant.applicationId} ${permissions.get(1)}".split(' ')
+                }
+                exec {
+                    commandLine "$adb shell pm grant ${variant.applicationId} ${permissions.get(2)}".split(' ')
+                }
+                exec {
+                    commandLine "$adb shell pm grant ${variant.applicationId} ${permissions.get(3)}".split(' ')
+                }
+                exec {
+                    commandLine "$adb shell pm grant ${variant.applicationId} ${permissions.get(4)}".split(' ')
+                }
+            }
+        }
+        variant.testVariant.connectedInstrumentTest.dependsOn "configDevice${variant.name.capitalize()}"
+    }
+}
+
+apply plugin: 'com.google.gms.google-services'
+apply plugin: 'com.google.firebase.crashlytics'
+
+

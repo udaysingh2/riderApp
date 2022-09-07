@@ -1,0 +1,28 @@
+{
+  "version": 1,
+  "applicationId": "th.in.robinhood.rider.qa",
+  "variantType": "BASE_APK",
+  "elements": [
+    {
+      "outputType": {
+        "type": "MERGED_MANIFESTS"
+      },
+      "apkData": {
+        "type": "MAIN",
+        "splits": [],
+        "versionCode": 648,
+        "versionName": "2.5.6",
+        "outputFile": "app-qa-debug.apk",
+        "fullName": "qaDebug",
+        "baseName": "qa-debug",
+        "dirName": ""
+      },
+      "path": "AndroidManifest.xml",
+      "properties": {
+        "packageId": "th.in.robinhood.rider.qa",
+        "split": "",
+        "minSdkVersion": "26"
+      }
+    }
+  ]
+}

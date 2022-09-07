@@ -1,0 +1,31 @@
+{
+  "auth": {
+    "plugins": {
+      "awsCognitoAuthPlugin": {
+        "IdentityManager": {
+          "Default": {}
+        },
+        "CredentialsProvider": {
+          "CognitoIdentity": {
+            "Default": {
+              "PoolId": "ap-southeast-1:8deb71f7-2d0b-4145-98d7-7166c8c63adf",
+              "Region": "ap-southeast-1"
+            }
+          }
+        },
+        "CognitoUserPool": {
+          "Default": {
+            "PoolId": "ap-southeast-1_EusLkGiLC",
+            "AppClientId": "7n3j5nn2krhcg81q50j5jdgnij",
+            "Region": "ap-southeast-1"
+          }
+        },
+        "Auth": {
+          "Default": {
+            "authenticationFlowType": "USER_SRP_AUTH,USER_PASSWORD_AUTH,ADMIN_USER_PASSWORD_AUTH,REFRESH_TOKEN_AUTH"
+          }
+        }
+      }
+    }
+  }
+}

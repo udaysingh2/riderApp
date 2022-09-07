@@ -1,0 +1,22 @@
+{
+  "name": "cucumber-html-reporter",
+  "version": "5.2.0",
+  "description": "Generates Cucumber HTML reports in three different themes",
+  "main": "index.js",
+  "author": {
+    "name": "Anit Kumar",
+    "email": "anit.kumar@publicissapient.com"
+  },
+  "repository": {
+    "type": "gitlab",
+    "url": "gitlab+https://gitlab.devops.easy2easiest.com/rider-frontend/rider-app.git"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" & exit 1"
+  },
+  "license": "MIT",
+  "homepage": "https://gitlab.devops.easy2easiest.com/rider-frontend/rider-app#readme",
+  "devDependencies": {
+    "cucumber-html-reporter": "^5.1.0"
+  }
+}

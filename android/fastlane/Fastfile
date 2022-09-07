@@ -1,0 +1,139 @@
+platform :android do
+
+  before_all do |lane, options|
+    setup_jenkins
+  end
+
+  before_each do |lane, options|
+    print "\n---->  Preparing Version Number"
+    @current_build_number = ENV['BUILD_NUMBER']
+    @packageVersion = options[:versionName]
+    @repo_project_version = @packageVersion + "-" + @current_build_number
+    @firebase_appid_android_dev = "1:465744335200:android:409343abe00efdf9aa4e05"
+    @firebase_appid_android_qa = "1:465744335200:android:72daaf95c727e301aa4e05"
+    @firebase_appid_android_preprod = "1:465744335200:android:2fa5a61e46b6024faa4e05"
+    @firebase_release_note = "From Jenkins - Purple Venture machine, branch: "
+    @apk_path_dev = "../build/app/outputs/flutter-apk/app-dev-release.apk"
+    @apk_path_qa = "../build/app/outputs/flutter-apk/app-qa-release.apk"
+    @apk_path_preprod = "../build/app/outputs/flutter-apk/app-preprod-release.apk"
+    @apk_path_prod = "../build/app/outputs/flutter-apk/app-prod-release.apk"
+    @firebase_cli_token = "1//0g9Cw2PgTOvMFCgYIARAAGBASNwF-L9IrfU-BP3bD_mKAeSmqZF3QRDKqMQAXRrXkQa15-bRG9olPpEf2tR2WcmjE5gwc2m_l-0g"
+    @nexus_repo_id = "purplev-rider-mobile"
+    @nexus_endpoint = "https://nexus-internal.np.aella.tech"
+
+    print "\nProject Version: " + @packageVersion
+    print "\nCurrent Build: " + @current_build_number
+    print "\nNEXUS Version: " + @repo_project_version
+  end
+
+
+  desc "LANE: dev"
+  lane :dev do |options|
+    username = options[:nexus_username]
+    password = options[:nexus_password]
+    release_notes = @firebase_release_note + options[:branch]
+
+    nexus_upload(
+      nexus_version: 3,
+      mount_path: "",
+      file: @apk_path_dev,
+      repo_id: @nexus_repo_id,
+      repo_group_id: "th.in.robinhood.rider.dev",
+      repo_project_name: @packageVersion,
+      repo_project_version: @current_build_number,
+      endpoint: @nexus_endpoint,
+      username: username,
+      password: password
+    )
+
+    firebase_app_distribution(
+      app: @firebase_appid_android_dev,
+      firebase_cli_token: @firebase_cli_token,
+      android_artifact_path: @apk_path_dev,
+      android_artifact_type: "APK",
+      release_notes: release_notes,
+      debug: true,
+      groups: "qa-merchant"
+    )
+  end
+
+  desc "LANE: qa"
+  lane :qa do |options|
+    username = options[:nexus_username]
+    password = options[:nexus_password]
+    release_notes = @firebase_release_note + options[:branch]
+
+    nexus_upload(
+      nexus_version: 3,
+      mount_path: "",
+      file: @apk_path_qa,
+      repo_id: @nexus_repo_id,
+      repo_group_id: "th.in.robinhood.rider.qa",
+      repo_project_name: @packageVersion,
+      repo_project_version: @current_build_number,
+      endpoint: @nexus_endpoint,
+      username: username,
+      password: password
+    )
+
+    firebase_app_distribution(
+      app: @firebase_appid_android_qa,
+      firebase_cli_token: @firebase_cli_token,
+      android_artifact_path: @apk_path_qa,
+      android_artifact_type: "APK",
+      release_notes: release_notes,
+      debug: true,
+      groups: "qa-merchant"
+    )
+  end
+
+  
+
+  desc "LANE: preprod"
+  lane :preprod do |options|
+    username = options[:nexus_username]
+    password = options[:nexus_password]
+    release_notes = @firebase_release_note + options[:branch]
+
+    nexus_upload(
+      nexus_version: 3,
+      mount_path: "",
+      file: @apk_path_preprod,
+      repo_id: @nexus_repo_id,
+      repo_group_id: "th.in.robinhood.rider.preprod",
+      repo_project_name: @packageVersion,
+      repo_project_version: @current_build_number,
+      endpoint: @nexus_endpoint,
+      username: username,
+      password: password
+    )
+
+    firebase_app_distribution(
+      app: @firebase_appid_android_preprod,
+      firebase_cli_token: @firebase_cli_token,
+      android_artifact_path: @apk_path_preprod,
+      android_artifact_type: "APK",
+      release_notes: release_notes,
+      debug: true,
+      groups: "qa-merchant"
+    )
+  end
+
+  desc "LANE: prod"
+  lane :prod do |options|
+    username = options[:nexus_username]
+    password = options[:nexus_password]
+    nexus_upload(
+      nexus_version: 3,
+      mount_path: "",
+      file: @apk_path_prod,
+      repo_id: @nexus_repo_id,
+      repo_group_id: "th.in.robinhood.rider.prod",
+      repo_project_name: @packageVersion,
+      repo_project_version: @current_build_number,
+      endpoint: @nexus_endpoint,
+      username: username,
+      password: password
+    )
+  end
+end

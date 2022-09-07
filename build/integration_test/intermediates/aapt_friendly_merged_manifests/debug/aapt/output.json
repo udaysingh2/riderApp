@@ -1,0 +1,26 @@
+{
+  "version": 1,
+  "applicationId": "dev.flutter.integration_test",
+  "variantType": "LIBRARY",
+  "elements": [
+    {
+      "outputType": {
+        "type": "AAPT_FRIENDLY_MERGED_MANIFESTS"
+      },
+      "apkData": {
+        "type": "MAIN",
+        "splits": [],
+        "versionCode": -1,
+        "outputFile": "integration_test-debug.aar",
+        "fullName": "debug",
+        "baseName": "debug",
+        "dirName": ""
+      },
+      "path": "AndroidManifest.xml",
+      "properties": {
+        "packageId": "dev.flutter.integration_test",
+        "split": ""
+      }
+    }
+  ]
+}
